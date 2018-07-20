@@ -1,7 +1,8 @@
 import sys
-import gym
+#import gym
+import gym.spaces
 import torch
-import pylab
+#import pylab
 import random
 import numpy as np
 from collections import deque
@@ -87,7 +88,7 @@ class DQNAgent():
     def weights_init(self, m):
         classname = m.__class__.__name__
         if classname.find('Linear') != -1:
-            torch.nn.init.xavier_uniform(m.weight)
+            torch.nn.init.xavier_uniform_(m.weight)
 
     # after some time interval update the target model to be same with model
     def update_target_model(self):
@@ -182,6 +183,7 @@ class DQNAgent():
 if __name__ == "__main__":
     # In case of CartPole-v1, maximum length of episode is 500
     env = gym.make('Pong-v0')#Pong-v0
+    #np.seterr(divide='ignore')
     state_size = env.observation_space.shape[0]
     prev_x = None  # used in computing the difference frame
     state_size = D
@@ -255,6 +257,3 @@ if __name__ == "__main__":
                 # if the mean of scores of last 10 episode is bigger than 490
                 # stop training
                 reward_sum = 0
-                if np.mean(scores[-min(10, len(scores)):]) > 490:
-                    torch.save(agent.model, "./save_model/cartpole_dqn")
-                    sys.exit()
